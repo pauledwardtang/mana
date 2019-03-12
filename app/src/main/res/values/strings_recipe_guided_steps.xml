@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ingredients_icon_cd">Ingredients Label Icon</string>
+    <string name="ingredients_toggle_show_cd">Button for displaying ingredients list</string>
+    <string name="ingredients_toggle_hide_cd">Button for hiding ingredients list</string>
+
+</resources>

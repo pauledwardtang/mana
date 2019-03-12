@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="serves_label">Serves:</string>
+    <string name="ingredients_label_text">Ingredients:</string>
+    <string name="steps_overview_label">Steps Overview:</string>
+</resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <data>
+        <import type="io.phatcat.mana.utils.StringUtils" />
+        <variable name="data" type="io.phatcat.mana.model.RecipeData" />
+    </data>
+
+<androidx.cardview.widget.CardView
+    android:id="@+id/cardView"
+    style="@style/AppTheme.MaterialCardView" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cardIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/recipe_card_icon_content_description"
+            android:cropToPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/circle"/>
+
+        <TextView
+            android:id="@+id/titleFirstLetter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{StringUtils.getFirstLetterOrBlank(data.recipe.name)}"
+            app:layout_constraintBottom_toBottomOf="@+id/cardIcon"
+            app:layout_constraintEnd_toEndOf="@+id/cardIcon"
+            app:layout_constraintStart_toStartOf="@+id/cardIcon"
+            app:layout_constraintTop_toTopOf="@+id/cardIcon"
+            tools:text="B"
+            tools:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{data.recipe.name}"
+            android:fontFamily="@font/frederickathegreat_regular"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
+</layout>

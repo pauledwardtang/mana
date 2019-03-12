@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.details.RecipeDetailsFragment">
+
+    <data>
+        <variable name="data" type="io.phatcat.mana.model.RecipeData" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Serving info -->
+                <TextView
+                    style="@style/AppTheme.Body.Text"
+                    android:id="@+id/servesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/serves_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/servingsText"
+                    style="@style/AppTheme.Body.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@{String.valueOf(data.recipe.servings)}"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/servesLabel"
+                    app:layout_constraintStart_toEndOf="@+id/servesLabel"
+                    tools:text="9.0" />
+
+                <!-- Ingredients -->
+                <TextView
+                    android:id="@+id/ingredientsLabel"
+                    style="@style/AppTheme.Body.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/ingredients_label_text"
+                    app:layout_constraintStart_toStartOf="@+id/servesLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/servesLabel" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ingredientsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@+id/ingredientsLabel"
+                    tools:listitem="@layout/ingredients_list_item"
+                    tools:itemCount="3"
+                    />
+
+                <!-- Steps -->
+                <TextView
+                    android:id="@+id/stepsLabel"
+                    style="@style/AppTheme.Body.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/steps_overview_label"
+                    app:layout_constraintStart_toStartOf="@+id/ingredientsLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/ingredientsList" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/stepsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@+id/stepsLabel"
+                    tools:listitem="@layout/steps_list_item" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_gravity="bottom|end"
+            android:elevation="@dimen/fab_elevation"
+            app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

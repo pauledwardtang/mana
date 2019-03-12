@@ -1,0 +1,32 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<resources>
+  <!-- Swatch -->
+  <color name="white">@android:color/white</color>
+  <color name="black">@android:color/black</color>
+  <color name="grey_500">#9e9e9e</color>
+
+  <!-- https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=FFECB3&secondary.color=FFE082 -->
+  <!-- Material Components-->
+  <color name="colorPrimary">#ffecb3</color>
+  <color name="colorPrimaryLight">#ffffe5</color>
+  <color name="colorPrimaryDark">#cbba83</color>
+
+  <color name="colorAccent">#ffe082</color>
+  <color name="colorAccentLight">#ffffb3</color>
+  <color name="colorAccentDark">#CAAE53</color>
+
+  <color name="primaryTextColor">@color/black</color>
+  <color name="secondaryTextColor">@color/black</color>
+
+  <color name="colorBackground">@color/colorPrimaryLight</color>
+  <color name="colorSurface">@color/colorAccentLight</color>
+  <color name="colorError">#B00020</color>
+
+  <color name="colorOnPrimary">@color/black</color>
+  <color name="colorOnSecondary">@color/black</color>
+  <color name="colorOnBackground">@color/black</color>
+  <color name="colorOnSurface">@color/black</color>
+  <color name="colorOnError">@color/white</color>
+
+  <color name="colorCardStroke">@color/grey_500</color>
+</resources>
