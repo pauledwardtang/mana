@@ -2,6 +2,9 @@ package io.phatcat.mana.storage;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import androidx.lifecycle.LiveData;
 import io.phatcat.mana.model.RecipeData;
 
@@ -9,7 +12,8 @@ public class RecipeRepository implements RecipeDataSource {
 
     private RecipeDataSource localDataSource;
 
-    public RecipeRepository(RecipeDataSource localDataSource) {
+    @Inject
+    public RecipeRepository(@Named("local") RecipeDataSource localDataSource) {
         this.localDataSource = localDataSource;
     }
 

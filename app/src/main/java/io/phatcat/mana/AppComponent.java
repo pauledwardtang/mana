@@ -34,8 +34,6 @@ public interface AppComponent extends AndroidInjector<ManaApplication> {
     @Component.Builder
     interface Builder {
         @BindsInstance Builder context(Context context);
-        Builder storageModule(StorageModule storageModule);
-        Builder networkModule(NetworkModule networkModule);
         AppComponent build();
     }
 }

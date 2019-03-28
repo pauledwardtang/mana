@@ -16,16 +16,10 @@ public class ManaApplication extends Application implements HasActivityInjector 
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
-    protected AppComponent appComponent;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        String baseUrl = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
-        appComponent = DaggerAppComponent.builder()
-                .context(this)
-                .networkModule(new NetworkModule(baseUrl, true))
-                .build();
+        AppComponent appComponent = DaggerAppComponent.builder().context(this).build();
         appComponent.inject(this);
     }
 

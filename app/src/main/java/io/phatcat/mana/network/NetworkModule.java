@@ -1,5 +1,6 @@
 package io.phatcat.mana.network;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -7,19 +8,26 @@ import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Definitely could use BuildConfig consts in this class :)
+ */
 @Module
 public class NetworkModule {
-    private final String baseUrl;
-    private final boolean shouldEnqueue;
+    @Provides
+    @Named("shouldEnqueue")
+    Boolean provideShouldEnqueue() {
+        return true;
+    }
 
-    public NetworkModule(String baseUrl, boolean shouldEnqueue) {
-        this.baseUrl = baseUrl;
-        this.shouldEnqueue = shouldEnqueue;
+    @Provides
+    @Named("baseUrl")
+    String provideBaseUrl() {
+        return "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
     }
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit() {
+    Retrofit provideRetrofit(@Named("baseUrl") String baseUrl) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -32,9 +40,4 @@ public class NetworkModule {
         return retrofit.create(RecipeApi.class);
     }
 
-    @Provides
-    @Singleton
-    RecipeNetworkService provideNetworkService(RecipeApi api){
-        return new RecipeNetworkService(api, shouldEnqueue);
-    }
 }

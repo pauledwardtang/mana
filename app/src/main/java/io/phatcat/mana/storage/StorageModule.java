@@ -6,37 +6,30 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import androidx.room.Room;
+import dagger.Binds;
+import dagger.BindsInstance;
 import dagger.Module;
 import dagger.Provides;
 import io.phatcat.mana.storage.local.RecipeDao;
 import io.phatcat.mana.storage.local.RecipeDatabase;
 import io.phatcat.mana.storage.local.RecipeLocalDataSource;
 
-// TODO encapsulate data sources
 @Module
-public class StorageModule {
+public abstract class StorageModule {
     @Provides
     @Singleton
-    RecipeDatabase provideDatabase(Context context) {
+    static RecipeDatabase provideDatabase(Context context) {
         return Room.databaseBuilder(context, RecipeDatabase.class, "recipes").build();
     }
 
     @Provides
     @Singleton
-    RecipeDao provideRecipeDao(RecipeDatabase recipeDatabase) {
+    static RecipeDao provideRecipeDao(RecipeDatabase recipeDatabase) {
         return recipeDatabase.recipeDao();
     }
 
-    @Provides
-    @Singleton
+    // Using named here since a "remote" data source could be added in the future.
+    @Binds
     @Named("local")
-    RecipeDataSource provideLocalDataSource(RecipeDao dao) {
-        return new RecipeLocalDataSource(dao);
-    }
-
-    @Provides
-    @Singleton
-    RecipeRepository provideRecipeRepository(@Named("local") RecipeDataSource localDataSource) {
-        return new RecipeRepository(localDataSource);
-    }
+    abstract RecipeDataSource provideLocalDataSource(RecipeLocalDataSource localDataSource);
 }

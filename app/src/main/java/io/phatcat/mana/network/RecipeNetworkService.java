@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -16,7 +17,7 @@ public class RecipeNetworkService {
     private boolean shouldEnqueue;
 
     @Inject
-    public RecipeNetworkService(RecipeApi recipeApi, boolean shouldEnqueue) {
+    public RecipeNetworkService(RecipeApi recipeApi, @Named("shouldEnqueue") Boolean shouldEnqueue) {
         this.recipeApi = recipeApi;
         this.shouldEnqueue = shouldEnqueue;
     }
