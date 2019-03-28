@@ -32,6 +32,9 @@ public class RecipeDetailsFragment extends DaggerFragment {
     private IngredientsListAdapter ingredientsListAdapter;
     private StepsListAdapter stepsListAdapter;
 
+    private Long recipeId;
+    private String recipeName;
+
     /**
      * Required empty public constructor
      */
@@ -40,9 +43,10 @@ public class RecipeDetailsFragment extends DaggerFragment {
     public static RecipeDetailsFragment getInstance(long recipeId, @NonNull String recipeName) {
         RecipeDetailsFragment detailsFragment = new RecipeDetailsFragment();
 
-        Bundle bundle = new Bundle();
-        bundle.putLong(Intents.EXTRA_RECIPE_ID, recipeId);
-        bundle.putString(Intents.EXTRA_RECIPE_NAME, recipeName);
+        Bundle bundle = BundleUtils.Builder.create()
+                .putRecipeId(recipeId)
+                .putRecipeName(recipeName)
+                .build();
 
         detailsFragment.setArguments(bundle);
         return detailsFragment;
@@ -55,8 +59,8 @@ public class RecipeDetailsFragment extends DaggerFragment {
         isMasterDetailFlow = false; // TODO Check binding here for isTablet logic!
 
         Bundle bundle = (savedInstanceState == null) ? getArguments() : savedInstanceState;
-        Long recipeId = BundleUtils.getRecipeId(bundle);
-        String recipeName = BundleUtils.getRecipeName(bundle);
+        recipeId = BundleUtils.getRecipeId(bundle);
+        recipeName = BundleUtils.getRecipeName(bundle);
 
         if (recipeId == null) {
             Toast.makeText(getContext(), R.string.recipe_not_found, Toast.LENGTH_SHORT).show();
@@ -71,7 +75,9 @@ public class RecipeDetailsFragment extends DaggerFragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putLong(Intents.EXTRA_RECIPE_ID, getArguments().getLong(Intents.EXTRA_RECIPE_ID));
+        BundleUtils.Builder.proxy(outState)
+                .putRecipeId(recipeId)
+                .putRecipeName(recipeName);
     }
 
     private void initViews(long recipeId, String recipeName) {

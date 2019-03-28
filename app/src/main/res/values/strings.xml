@@ -3,8 +3,12 @@
 
     <string name="recipe_card_icon_content_description">Recipe image background</string>
     <string name="no_recipes_found">No recipes found!</string>
-    <string name="recipe_not_found">Recipe found!</string>
+    <string name="recipe_not_found">Recipe not found!</string>
+    <string name="error_network">A network error has occurred, please try again later.</string>
+
     <string name="title_recipe_list">Recipes</string>
     <string name="title_recipe_detail">Recipe Detail</string>
 
+    <string name="navigate_next">Next</string>
+    <string name="action_close">Close</string>
 </resources>

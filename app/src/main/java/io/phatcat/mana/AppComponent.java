@@ -1,13 +1,18 @@
 package io.phatcat.mana;
 
+import android.content.Context;
+
 import javax.inject.Singleton;
 
+import androidx.annotation.VisibleForTesting;
+import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
 import io.phatcat.mana.concurrent.ConcurrencyModule;
 import io.phatcat.mana.network.NetworkModule;
 import io.phatcat.mana.network.RecipeNetworkService;
+import io.phatcat.mana.storage.RecipeRepository;
 import io.phatcat.mana.storage.StorageModule;
 import io.phatcat.mana.view.RecipesFragment;
 import io.phatcat.mana.viewmodel.RecipeViewModel;
@@ -23,5 +28,14 @@ import io.phatcat.mana.viewmodel.ViewModelModule;
         ViewModelModule.class
 })
 public interface AppComponent extends AndroidInjector<ManaApplication> {
-    void inject(RecipeNetworkService networkService);
+    @VisibleForTesting RecipeRepository recipeRepository();
+    @VisibleForTesting RecipeNetworkService recipeNetworkService();
+
+    @Component.Builder
+    interface Builder {
+        @BindsInstance Builder context(Context context);
+        Builder storageModule(StorageModule storageModule);
+        Builder networkModule(NetworkModule networkModule);
+        AppComponent build();
+    }
 }

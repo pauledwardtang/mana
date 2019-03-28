@@ -34,7 +34,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    RecipeNetworkService provideNetworkService(){
-        return new RecipeNetworkService(shouldEnqueue);
+    RecipeNetworkService provideNetworkService(RecipeApi api){
+        return new RecipeNetworkService(api, shouldEnqueue);
     }
 }

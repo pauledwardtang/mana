@@ -8,6 +8,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import io.phatcat.mana.R;
 import io.phatcat.mana.databinding.StepsListItemBinding;
 import io.phatcat.mana.model.Step;
@@ -20,12 +21,14 @@ import io.phatcat.mana.model.Step;
 public class StepsListAdapter
         extends BaseListAdapter<Step, StepsListAdapter.StepViewHolder> {
     private static final String TAG = StepsListAdapter.class.getName();
+    private static final int DEFAULT_STEP_NUMBER = 0;
+
     private boolean shouldFocusItems;
-    private static int SELECTED_ITEM;
+    public static int SELECTED_ITEM;
 
     public StepsListAdapter(@NonNull List<Step> list,
                             ListItemClickListener<Step> listItemClickListener) {
-        this(list, listItemClickListener, false, 0);
+        this(list, listItemClickListener, false, DEFAULT_STEP_NUMBER);
     }
 
     /**
@@ -41,6 +44,13 @@ public class StepsListAdapter
         super(list, listItemClickListener);
         this.shouldFocusItems = shouldFocusItems;
         SELECTED_ITEM = selectedItem;
+
+        setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -58,11 +68,18 @@ public class StepsListAdapter
             holder.setSelectedByStepNumber(SELECTED_ITEM);
     }
 
+    public void setSelectedItem(RecyclerView recyclerView, int stepNo) {
+        StepViewHolder holder = (StepViewHolder) recyclerView.findViewHolderForItemId(stepNo);
+        if (holder != null && shouldFocusItems) {
+            holder.selectStep();
+        }
+    }
+
     /**
      * Callers MUST call this when uninitializing/detaching to avoid inconsistent state.
      */
     public void reset() {
-        SELECTED_ITEM = 0;
+        SELECTED_ITEM = DEFAULT_STEP_NUMBER;
         StepViewHolder.LAST_SELECTED_ITEM = null;
     }
 
@@ -110,12 +127,24 @@ public class StepsListAdapter
             }
         }
 
+        public void selectStep() {
+            if (isFocusable) {
+                StepsListItemBinding binding = (StepsListItemBinding) getBinding();
+                binding.cardView.requestFocus();
+            }
+        }
+
         public void setSelectedByStepNumber(int stepNumber) {
             StepsListItemBinding binding = (StepsListItemBinding) getBinding();
 
             boolean isSelected = isSelected(stepNumber);
+
+            // Check if first time load
             if (isSelected && LAST_SELECTED_ITEM == null) {
                 LAST_SELECTED_ITEM = binding.cardView;
+
+                // Manual call since user isn't clicking the first item shown
+                binding.cardView.callOnClick();
             }
             setBackground(binding.cardView, isSelected);
         }

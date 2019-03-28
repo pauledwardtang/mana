@@ -9,20 +9,15 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import io.phatcat.mana.AppComponent;
 import io.phatcat.mana.DaggerAppComponent;
 import io.phatcat.mana.ManaApplication;
-import io.phatcat.mana.concurrent.ConcurrencyModule;
 import io.phatcat.mana.model.RecipeData;
 import io.phatcat.mana.network.NetworkModule;
-import io.phatcat.mana.network.RecipeNetworkService;
-import io.phatcat.mana.storage.StorageModule;
-import io.phatcat.mana.storage.StorageModuleProxy;
+import io.phatcat.mana.storage.TestStorageModule;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertNotNull;
@@ -41,17 +36,13 @@ public class RecipeViewModelTest {
                 .getApplicationContext();
 
         String baseUrl = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
-        app.setAppComponent(DaggerAppComponent.builder()
-                .storageModule(new StorageModule(app))
-                .networkModule(new NetworkModule(baseUrl, false))
-                .build());
+        AppComponent appComponent = DaggerAppComponent.builder()
+                        .context(app)
+                        .storageModule(new TestStorageModule())
+                        .networkModule(new NetworkModule(baseUrl, false))
+                        .build();
 
-        AppComponent appComponent = app.getAppComponent();
-
-        StorageModuleProxy proxy = new StorageModuleProxy(new StorageModule(app));
-        RecipeNetworkService networkService = new RecipeNetworkService(false);
-        appComponent.inject(networkService);
-        subject = new RecipeViewModel(proxy.provideRecipeRepository(), networkService);
+        subject = new RecipeViewModel(appComponent.recipeRepository(), appComponent.recipeNetworkService());
     }
 
     @Test

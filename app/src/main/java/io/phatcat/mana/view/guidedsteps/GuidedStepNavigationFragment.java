@@ -3,7 +3,11 @@ package io.phatcat.mana.view.guidedsteps;
 
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,6 +25,8 @@ import io.phatcat.mana.databinding.FragmentGuidedStepNavigationBinding;
 import io.phatcat.mana.model.RecipeData;
 import io.phatcat.mana.model.Step;
 import io.phatcat.mana.utils.BundleUtils;
+import io.phatcat.mana.view.BaseListAdapter;
+import io.phatcat.mana.view.BaseListAdapter.ListItemClickListener;
 import io.phatcat.mana.view.IngredientsListAdapter;
 import io.phatcat.mana.view.Intents;
 import io.phatcat.mana.view.StepsListAdapter;
@@ -35,7 +41,7 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
     private StepsListAdapter stepsListAdapter;
 
     private RecipeData recipeData;
-    private int currentStepIndex = 0;
+    private int currentStepNumber;
 
     /**
      * Required empty public constructor
@@ -45,11 +51,11 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
     static GuidedStepNavigationFragment getInstance(long recipeId, int currentStepIndex) {
         GuidedStepNavigationFragment fragment = new GuidedStepNavigationFragment();
 
-        Bundle bundle = new Bundle();
-        bundle.putLong(Intents.EXTRA_RECIPE_ID, recipeId);
-        bundle.putInt(Intents.EXTRA_CURRENT_STEP_INDEX, currentStepIndex);
+        fragment.setArguments(BundleUtils.Builder.create()
+                .putRecipeId(recipeId)
+                .putCurrentStepIndex(currentStepIndex)
+                .build());
 
-        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -58,22 +64,50 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentGuidedStepNavigationBinding.inflate(inflater, container, false);
+        setHasOptionsMenu(true);
+
         Bundle bundle = (savedInstanceState == null) ? getArguments() : savedInstanceState;
         Long recipeId = BundleUtils.getRecipeId(bundle);
-        currentStepIndex = BundleUtils.getCurrentStepIndex(bundle);
+        currentStepNumber = BundleUtils.getCurrentStepIndex(bundle);
         if (recipeId == null) {
             requireActivity().finish();
         }
         else {
-            initViews(recipeId, currentStepIndex);
+            initViews(recipeId, currentStepNumber);
         }
 
         return binding.getRoot();
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        MenuItem nextMenuItem = menu.findItem(R.id.action_next);
+        nextMenuItem.setVisible(!isLastStep());
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_next: {
+                // If end of list, this is actually "end"
+                int nextStep = currentStepNumber + 1;
+                if (nextStep >= recipeData.recipeSteps.size() - 1) {
+                    Log.d("NavFrag", "Final element will have been reached!");
+                    requireActivity().invalidateOptionsMenu();
+                }
+                stepsListAdapter.setSelectedItem(binding.stepsList, nextStep);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putLong(Intents.EXTRA_RECIPE_ID, getArguments().getLong(Intents.EXTRA_RECIPE_ID));
+        BundleUtils.Builder.proxy(outState)
+                .putRecipeId(recipeData.recipe.id)
+                .putCurrentStepIndex(currentStepNumber);
 
         // TODO remember expanded ingredients, remember selected step??
     }
@@ -137,7 +171,7 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
      */
     private void setRecipeDetails(RecipeData recipe) {
         if (recipeData == null) {
-            Step currentStep = recipe.recipeSteps.get(currentStepIndex);
+            Step currentStep = recipe.recipeSteps.get(currentStepNumber);
             setTitle(currentStep.shortDescription);
         }
         recipeData = recipe;
@@ -146,10 +180,11 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
     }
 
     private void onStepClicked(Step step) {
-        if (currentStepIndex != step.stepNo) {
-            currentStepIndex = step.stepNo;
-            setTitle(step.shortDescription);
-        }
+        currentStepNumber = step.stepNo;
+        requireActivity().invalidateOptionsMenu();
+
+        ListItemClickListener<Step> listener = (ListItemClickListener<Step>) requireActivity();
+        listener.onClick(step);
     }
 
     private void setTitle(String title) {
@@ -157,4 +192,7 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
         activity.getSupportActionBar().setTitle(title);
     }
 
+    private boolean isLastStep() {
+        return recipeData != null && currentStepNumber >= recipeData.recipeSteps.size() - 1;
+    }
 }

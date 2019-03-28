@@ -16,6 +16,7 @@ public class Intents {
     public static final String EXTRA_RECIPE_ID = "io.phatcat.mana.extra.RECIPE_ID";
     public static final String EXTRA_RECIPE_NAME = "io.phatcat.mana.extra.RECIPE_NAME";
     public static final String EXTRA_CURRENT_STEP_INDEX = "io.phatcat.mana.extra.CURRENT_STEP_INDEX";
+    public static final String EXTRA_STEP = "io.phatcat.mana.extra.STEP";
 
     // Disable instantiation
     private Intents() {}

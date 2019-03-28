@@ -12,10 +12,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RecipeNetworkService {
-    @Inject RecipeApi recipeApi;
+    private RecipeApi recipeApi;
     private boolean shouldEnqueue;
 
-    public RecipeNetworkService(boolean shouldEnqueue) {
+    @Inject
+    public RecipeNetworkService(RecipeApi recipeApi, boolean shouldEnqueue) {
+        this.recipeApi = recipeApi;
         this.shouldEnqueue = shouldEnqueue;
     }
 

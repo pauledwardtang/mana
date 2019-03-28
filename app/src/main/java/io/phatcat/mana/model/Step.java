@@ -1,5 +1,7 @@
 package io.phatcat.mana.model;
 
+import java.io.Serializable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
@@ -17,7 +19,7 @@ import androidx.room.Index;
 },
         primaryKeys={"recipeId", "stepNo"},
         indices={@Index(value="recipeId")})
-public class Step {
+public class Step implements Serializable {
     public long recipeId;
     public int stepNo;
     @NonNull public String shortDescription;

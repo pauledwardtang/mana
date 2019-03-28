@@ -2,9 +2,11 @@ package io.phatcat.mana.view;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.support.DaggerFragment;
+import io.phatcat.mana.R;
 import io.phatcat.mana.databinding.FragmentRecipesBinding;
 import io.phatcat.mana.model.RecipeData;
 import io.phatcat.mana.viewmodel.RecipeViewModel;
@@ -22,6 +25,7 @@ import io.phatcat.mana.viewmodel.ViewModelFactory;
 public class RecipesFragment extends DaggerFragment {
     @Inject ViewModelFactory viewModelFactory;
 
+    private RecipeViewModel viewModel;
     private FragmentRecipesBinding binding;
     private RecipeListAdapter listAdapter;
     private boolean isMasterDetailFlow;
@@ -52,10 +56,17 @@ public class RecipesFragment extends DaggerFragment {
         });
         binding.recipeList.setAdapter(listAdapter);
 
-        RecipeViewModel viewModel = ViewModelProviders.of(getActivity(), viewModelFactory)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(RecipeViewModel.class);
 
         viewModel.getAllRecipes().observe(this, this::setRecipes);
+        viewModel.loadRecipes(new RecipeViewModel.LoadRecipesCallback() {
+            @Override public void onSuccess() {}
+            @Override public void onFailure(Throwable t) {
+                Toast.makeText(getContext(), R.string.error_network, Toast.LENGTH_LONG).show();
+            }
+        });
+
         return rootView;
     }
 
@@ -68,6 +79,7 @@ public class RecipesFragment extends DaggerFragment {
             binding.emptyListText.setVisibility(View.GONE);
             binding.recipeList.setVisibility(View.VISIBLE);
         }
+
         listAdapter.setRecipes(recipes);
     }
 

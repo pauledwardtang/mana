@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.guidedsteps.GuidedStepDetailsFragment" >
+
+    <data>
+        <import type="android.view.View" />
+        <variable name="step" type="io.phatcat.mana.model.Step" />
+    </data>
+
+    <!-- TODO this doesn't work right on landscape for mobile. -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize" >
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/exoPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:controller_layout_id="@layout/exo_player_playback_control"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/recipeImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/step_thumbnail_cd"
+            app:layout_constraintBottom_toTopOf="@+id/descriptionSurface"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/descriptionSurface"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/exoPlayer"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            style="@style/AppTheme.Title.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{String.valueOf(step.stepNo)}"
+            android:visibility="@{step.stepNo == 0 ? View.INVISIBLE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/descriptionSurface"
+            tools:text="1" />
+
+        <TextView
+            style="@style/AppTheme.Body.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{step.description}"
+            app:layout_constraintBottom_toBottomOf="@+id/descriptionSurface"
+            app:layout_constraintEnd_toEndOf="@id/descriptionSurface"
+            app:layout_constraintStart_toStartOf="@+id/descriptionSurface"
+            app:layout_constraintTop_toTopOf="@+id/descriptionSurface"
+            tools:text="@tools:sample/lorem/random" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
