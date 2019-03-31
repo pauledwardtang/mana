@@ -7,64 +7,88 @@
 
     <data>
         <import type="android.view.View" />
+        <variable name="isMediaPresent" type="Boolean" />
+        <import type="io.phatcat.mana.utils.StringUtils" />
         <variable name="step" type="io.phatcat.mana.model.Step" />
     </data>
 
-    <!-- TODO this doesn't work right on landscape for mobile. -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize" >
+        android:layout_height="match_parent" >
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/exoPlayer"
+        <LinearLayout
+            android:id="@+id/mediaLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:controller_layout_id="@layout/exo_player_playback_control"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            app:layout_constraintHeight_percent="@dimen/guided_step_player_height_percent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/recipeImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/step_thumbnail_cd"
-            app:layout_constraintBottom_toTopOf="@+id/descriptionSurface"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/exoPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                android:visibility="@{StringUtils.isNotBlank(step.videoUrl) ? View.VISIBLE : View.GONE}"
+                app:controller_layout_id="@layout/exo_player_playback_control" />
 
-        <View
-            android:id="@+id/descriptionSurface"
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/step_thumbnail_cd"
+                android:visibility="@{StringUtils.isNotBlank(step.thumbnailUrl) ? View.VISIBLE : View.GONE}" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/exoPlayer"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <TextView
-            style="@style/AppTheme.Title.Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@{String.valueOf(step.stepNo)}"
-            android:visibility="@{step.stepNo == 0 ? View.INVISIBLE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:fillViewport="true"
+            android:fadeScrollbars="false"
+            android:layout_marginTop="@{isMediaPresent? @dimen/margin_media_present : @dimen/margin_media_absent}"
+            app:layout_constraintTop_toBottomOf="@id/mediaLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/descriptionSurface"
-            tools:text="1" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" >
 
-        <TextView
-            style="@style/AppTheme.Body.Text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@{step.description}"
-            app:layout_constraintBottom_toBottomOf="@+id/descriptionSurface"
-            app:layout_constraintEnd_toEndOf="@id/descriptionSurface"
-            app:layout_constraintStart_toStartOf="@+id/descriptionSurface"
-            app:layout_constraintTop_toTopOf="@+id/descriptionSurface"
-            tools:text="@tools:sample/lorem/random" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" >
 
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/AppTheme.Title.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@{String.valueOf(step.stepNo)}"
+                    android:visibility="@{step.stepNo == 0 ? View.INVISIBLE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/description"
+                    style="@style/AppTheme.Body.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@{isMediaPresent? @dimen/margin_media_present : @dimen/margin_media_absent}"
+                    android:text="@{step.description}"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title"
+                    tools:text="@tools:sample/lorem/random" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

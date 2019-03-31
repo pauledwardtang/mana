@@ -14,7 +14,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:fadeScrollbars="false" >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -38,9 +39,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="@{String.valueOf(data.recipe.servings)}"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/servesLabel"
                     app:layout_constraintStart_toEndOf="@+id/servesLabel"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="9.0" />
 
                 <!-- Ingredients -->

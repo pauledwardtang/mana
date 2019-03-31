@@ -1,15 +1,21 @@
 package io.phatcat.mana.view.guidedsteps;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import dagger.android.support.DaggerAppCompatActivity;
@@ -30,34 +36,43 @@ public class GuidedRecipeStepActivity extends DaggerAppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_guided_recipe_step);
 
-        // TODO Infer this from layout
-        isTwoPane = false;
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_guided_recipe_step);
+        isTwoPane = binding.drawerLayout.getVisibility() == View.GONE;
 
         setSupportActionBar(binding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = (savedInstanceState == null) ? getIntent().getExtras() : savedInstanceState;
-        if (isTwoPane) {
-            String recipeName = BundleUtils.getRecipeName(bundle);
-            actionBar.setTitle(recipeName);
-            binding.toolbar.setTitle(recipeName);
-        }
-        else {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-        }
+        setIntent(getIntent().putExtras(bundle));
 
         recipeId = BundleUtils.getRecipeId(bundle);
+        currentStepIndex = BundleUtils.getCurrentStepIndex(bundle);
+        currentStep = BundleUtils.getStep(bundle);
         if (recipeId == null) {
             Toast.makeText(this, R.string.recipe_not_found, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        currentStepIndex = BundleUtils.getCurrentStepIndex(bundle);
-        currentStep = BundleUtils.getStep(bundle);
+        if (isTwoPane) {
+            String recipeName = BundleUtils.getRecipeName(bundle);
+            setSupportTitle(recipeName);
+        }
+        else {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+            if (currentStep != null) {
+                setSupportTitle(currentStep.shortDescription);
+            }
+            else {
+                // This is done because of a Toolbar bug that causes text to be truncated when
+                // a default title is swapped with a longer title. In this case, "MANA" is displayed
+                // first, then "Recipe Introduction" is set (usually). This becomes truncated to "Reci"
+                // TLDR: Setting text after onCreate on first layout will truncate past 4 chars.
+                setSupportTitle(getString(R.string.default_title_text));
+            }
+        }
 
         // Load the fragment if it exists instead of nuking and clearing nav state
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -77,15 +92,19 @@ public class GuidedRecipeStepActivity extends DaggerAppCompatActivity implements
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        BundleUtils.Builder.proxy(outState)
+        BundleUtils.Builder proxy = BundleUtils.Builder.proxy(outState)
                 .putRecipeId(recipeId)
                 .putCurrentStepIndex(currentStepIndex)
                 .putStep(currentStep);
+
+        if (isTwoPane) {
+            proxy.putRecipeName(getSupportActionBar().getTitle().toString());
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.menu_recipe_guide, menu);
+        getMenuInflater().inflate(R.menu.menu_recipe_guide, menu);
 
         // Allow fragments to handle the menu during inflation
         return false;
@@ -119,8 +138,11 @@ public class GuidedRecipeStepActivity extends DaggerAppCompatActivity implements
         if (currentStep != null && currentStep.stepNo == step.stepNo) return;
 
         currentStep = step;
-        binding.drawerLayout.closeDrawers();
-        binding.toolbar.setTitle(step.shortDescription);
+        if (!isTwoPane) {
+            binding.drawerLayout.closeDrawers();
+            setSupportTitle(step.shortDescription);
+        }
+
         loadDetailFragment(step);
     }
 
@@ -134,5 +156,10 @@ public class GuidedRecipeStepActivity extends DaggerAppCompatActivity implements
 //                .addToBackStack(String.valueOf(currentStepIndex))
                 .commit();
 
+    }
+
+    private void setSupportTitle(CharSequence title) {
+        TransitionManager.beginDelayedTransition(binding.toolbar);
+        getSupportActionBar().setTitle(title);
     }
 }

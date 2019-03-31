@@ -9,13 +9,12 @@
         android:id="@+id/action_next"
         android:title="@string/navigate_next"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_navigate_next_black_24dp"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_close"
         android:title="@string/action_close"
         android:orderInCategory="200"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
 </menu>

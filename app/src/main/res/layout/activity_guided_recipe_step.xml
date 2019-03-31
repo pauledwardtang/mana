@@ -24,11 +24,11 @@
             <FrameLayout
                 android:id="@+id/stepDetailsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <!-- TODO Don't forget to use this id to replace it in the tablet version-->
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="wrap_content"

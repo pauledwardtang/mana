@@ -52,17 +52,23 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-
     <style name="AppTheme.Title.Text" parent="AppTheme">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/frederickathegreat_regular</item>
     </style>
 
     <style name="AppTheme.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/body_auto_text_max_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0.04</item>
+
+        <!-- This behaves unpredictably! -->
+        <!--<item name="autoSizeTextType">uniform</item>-->
+        <!--<item name="autoSizeMaxTextSize">@dimen/body_auto_text_max_size</item>-->
+        <!--<item name="autoSizeMinTextSize">@dimen/body_auto_min_size</item>-->
+        <!--<item name="autoSizeStepGranularity">@dimen/body_auto_text_step_granularity</item>-->
+
         <item name="fontFamily">@font/amatic_sc_bold</item>
     </style>
 
@@ -82,6 +88,13 @@
         <item name="cardCornerRadius">@dimen/card_corner_radius</item>
         <item name="strokeWidth">@dimen/card_stroke_width</item>
         <item name="android:fontFamily">@font/amatic_sc_bold</item>
+    </style>
+
+    <!-- This exists to avoid databinding conflicts in alternate layouts. -->
+    <style name="DataBindingNullTheme">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:visibility">gone</item>
     </style>
 
 </resources>

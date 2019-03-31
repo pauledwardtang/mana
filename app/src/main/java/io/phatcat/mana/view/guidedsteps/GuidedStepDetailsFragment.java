@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 import dagger.android.support.DaggerFragment;
 import io.phatcat.mana.R;
 import io.phatcat.mana.databinding.FragmentGuidedStepDetailsBinding;
@@ -137,12 +138,13 @@ public class GuidedStepDetailsFragment extends DaggerFragment {
 
     private void initViews(Step step) {
         binding.setStep(step);
-        if (StringUtils.isNotBlank(step.videoUrl)) {
-            binding.recipeImage.setVisibility(View.GONE);
-        }
-        else if (StringUtils.isNotBlank(step.thumbnailUrl)) {
+
+        boolean hasPlayer = StringUtils.isNotBlank(step.videoUrl);
+        boolean hasThumbnail = StringUtils.isNotBlank(step.thumbnailUrl);
+        binding.setIsMediaPresent(hasPlayer || hasThumbnail);
+
+        if (!hasPlayer && hasThumbnail) {
             Log.d(TAG, "No video available, falling back to thumbnail: " + step.thumbnailUrl);
-            binding.exoPlayer.setVisibility(View.GONE);
             Picasso.get()
                     .load(step.thumbnailUrl)
                     .fit()
@@ -159,8 +161,13 @@ public class GuidedStepDetailsFragment extends DaggerFragment {
                         }
                     });
         }
-        else {
-            binding.exoPlayer.setVisibility(View.GONE);
+    }
+
+    @BindingAdapter("android:layout_marginTop")
+    public static void setLayoutMarginTop(View v, Float margin) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            params.setMargins(params.leftMargin, margin.intValue(), params.rightMargin, params.bottomMargin);
         }
     }
 

@@ -28,7 +28,6 @@ public class RecipesFragment extends DaggerFragment {
     private RecipeViewModel viewModel;
     private FragmentRecipesBinding binding;
     private RecipeListAdapter listAdapter;
-    private boolean isMasterDetailFlow;
 
     /**
      * Required empty public constructor
@@ -41,19 +40,15 @@ public class RecipesFragment extends DaggerFragment {
         binding = FragmentRecipesBinding.inflate(inflater, container, false);
 
         // TODO Check binding here for isTablet logic!
-        isMasterDetailFlow = false;
         View rootView = binding.getRoot();
 
         listAdapter = new RecipeListAdapter(Collections.emptyList(), recipeData -> {
-            // TODO Do a thing
-            if (isMasterDetailFlow) {
-                // Update detail fragment instead of launching activity
-            }
-            else {
-                startActivity(Intents.getDetailsIntent(getContext(), recipeData.recipe.id,
-                        recipeData.recipe.name));
-            }
+            // Don't hold a reference to the activity :P
+            RecipeListAdapter.OnRecipeDataClickedListener listener
+                    = (RecipeListAdapter.OnRecipeDataClickedListener) requireActivity();
+            listener.onClick(recipeData);
         });
+
         binding.recipeList.setAdapter(listAdapter);
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)

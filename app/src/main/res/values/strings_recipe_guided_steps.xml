@@ -6,4 +6,5 @@
     <string name="ingredients_toggle_hide_cd">Button for hiding ingredients list</string>
     <string name="step_thumbnail_cd">Thumbnail for current step</string>
 
+    <string name="default_title_text">Recipe Introduction</string>
 </resources>

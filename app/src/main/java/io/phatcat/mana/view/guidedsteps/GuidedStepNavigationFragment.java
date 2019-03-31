@@ -17,7 +17,6 @@ import java.util.Collections;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.support.DaggerFragment;
 import io.phatcat.mana.R;
@@ -25,10 +24,8 @@ import io.phatcat.mana.databinding.FragmentGuidedStepNavigationBinding;
 import io.phatcat.mana.model.RecipeData;
 import io.phatcat.mana.model.Step;
 import io.phatcat.mana.utils.BundleUtils;
-import io.phatcat.mana.view.BaseListAdapter;
 import io.phatcat.mana.view.BaseListAdapter.ListItemClickListener;
 import io.phatcat.mana.view.IngredientsListAdapter;
-import io.phatcat.mana.view.Intents;
 import io.phatcat.mana.view.StepsListAdapter;
 import io.phatcat.mana.viewmodel.RecipeViewModel;
 import io.phatcat.mana.viewmodel.ViewModelFactory;
@@ -108,8 +105,6 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
         BundleUtils.Builder.proxy(outState)
                 .putRecipeId(recipeData.recipe.id)
                 .putCurrentStepIndex(currentStepNumber);
-
-        // TODO remember expanded ingredients, remember selected step??
     }
 
     @Override
@@ -149,16 +144,16 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
 
     /**
      * Shows/hides the list of ingredients
-     * @param view
+     * @param toggleButton Button to toggle
      */
-    public void toggleIngredients(@NonNull View view) {
+    private void toggleIngredients(@NonNull View toggleButton) {
         TransitionManager.beginDelayedTransition(binding.ingredientsList);
-        if (view.equals(binding.hideIngredientsButton)) {
+        if (toggleButton.equals(binding.hideIngredientsButton)) {
             binding.ingredientsList.setVisibility(View.GONE);
             binding.hideIngredientsButton.setVisibility(View.GONE);
             binding.showIngredientsButton.setVisibility(View.VISIBLE);
         }
-        else if (view.equals(binding.showIngredientsButton)) {
+        else if (toggleButton.equals(binding.showIngredientsButton)) {
             binding.ingredientsList.setVisibility(View.VISIBLE);
             binding.showIngredientsButton.setVisibility(View.GONE);
             binding.hideIngredientsButton.setVisibility(View.VISIBLE);
@@ -167,13 +162,9 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
 
     /**
      * Binds/refreshes all data
-     * @param recipe
+     * @param recipe Details to populate
      */
     private void setRecipeDetails(RecipeData recipe) {
-        if (recipeData == null) {
-            Step currentStep = recipe.recipeSteps.get(currentStepNumber);
-            setTitle(currentStep.shortDescription);
-        }
         recipeData = recipe;
         ingredientsListAdapter.setList(recipe.recipeIngredients);
         stepsListAdapter.setList(recipe.recipeSteps);
@@ -185,11 +176,6 @@ public class GuidedStepNavigationFragment extends DaggerFragment {
 
         ListItemClickListener<Step> listener = (ListItemClickListener<Step>) requireActivity();
         listener.onClick(step);
-    }
-
-    private void setTitle(String title) {
-        AppCompatActivity activity = (AppCompatActivity) requireActivity();
-        activity.getSupportActionBar().setTitle(title);
     }
 
     private boolean isLastStep() {

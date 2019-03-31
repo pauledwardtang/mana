@@ -24,7 +24,7 @@ public class StepsListAdapter
     private static final int DEFAULT_STEP_NUMBER = 0;
 
     private boolean shouldFocusItems;
-    public static int SELECTED_ITEM;
+    private static int SELECTED_ITEM;
 
     public StepsListAdapter(@NonNull List<Step> list,
                             ListItemClickListener<Step> listItemClickListener) {
@@ -69,7 +69,9 @@ public class StepsListAdapter
     }
 
     public void setSelectedItem(RecyclerView recyclerView, int stepNo) {
+        recyclerView.scrollToPosition(stepNo);
         StepViewHolder holder = (StepViewHolder) recyclerView.findViewHolderForItemId(stepNo);
+
         if (holder != null && shouldFocusItems) {
             holder.selectStep();
         }

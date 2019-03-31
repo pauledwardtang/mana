@@ -13,6 +13,14 @@
     <dimen name="item_width">200dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="guided_step_surface_height_percent">0.30</dimen>
+    <dimen name="guided_step_player_height_percent">0.30</dimen>
+    <dimen name="guided_step_surface_height_percent">0.70</dimen>
+
+    <dimen name="margin_media_present">0dp</dimen>
+    <dimen name="margin_media_absent">64dp</dimen>
+
+    <dimen name="body_auto_text_max_size">18sp</dimen>
+    <dimen name="body_auto_min_size">12sp</dimen>
+    <dimen name="body_auto_text_step_granularity">2sp</dimen>
 
 </resources>
