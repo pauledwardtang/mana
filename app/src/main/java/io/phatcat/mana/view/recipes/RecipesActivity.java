@@ -1,4 +1,4 @@
-package io.phatcat.mana.view;
+package io.phatcat.mana.view.recipes;
 
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -16,6 +16,8 @@ import io.phatcat.mana.R;
 import io.phatcat.mana.databinding.ActivityRecipesBinding;
 import io.phatcat.mana.model.RecipeData;
 import io.phatcat.mana.utils.BundleUtils;
+import io.phatcat.mana.utils.WidgetUtils;
+import io.phatcat.mana.view.Intents;
 import io.phatcat.mana.view.details.RecipeDetailsFragment;
 
 public class RecipesActivity extends DaggerAppCompatActivity implements RecipeListAdapter.OnRecipeDataClickedListener {
@@ -64,6 +66,7 @@ public class RecipesActivity extends DaggerAppCompatActivity implements RecipeLi
         recipeName = recipeData.recipe.name;
 
         handleDataLoaded(recipeId, recipeName);
+        WidgetUtils.startWidgetUpdate(getApplicationContext(), recipeData);
     }
 
     private void handleDataLoaded(long recipeId, String recipeName) {

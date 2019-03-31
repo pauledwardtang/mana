@@ -1,4 +1,4 @@
-package io.phatcat.mana.view;
+package io.phatcat.mana.view.recipes;
 
 
 import android.util.Log;

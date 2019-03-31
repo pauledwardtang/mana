@@ -2,6 +2,9 @@ package io.phatcat.mana.utils;
 
 public class StringUtils {
 
+    // Disallow instantiation
+    private StringUtils() {}
+
     public static CharSequence getFirstLetterOrBlank(String input) {
         if (isNotBlank(input)) {
             return input.substring(0,1);

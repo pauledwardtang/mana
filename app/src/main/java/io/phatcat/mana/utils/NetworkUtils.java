@@ -14,6 +14,9 @@ import io.phatcat.mana.model.Step;
 
 public class NetworkUtils {
 
+    // Disallow instantiation
+    private NetworkUtils() {}
+
     public static List<RecipeData> from(@NonNull List<io.phatcat.mana.network.Recipe> recipes) {
         List<RecipeData> recipeData = new ArrayList<>();
         for (io.phatcat.mana.network.Recipe recipe: recipes) {

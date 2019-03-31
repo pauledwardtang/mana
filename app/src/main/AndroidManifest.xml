@@ -13,7 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.RecipesActivity">
+        <receiver android:name=".view.widget.RecipeAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_app_widget_info" />
+        </receiver>
+
+        <activity android:name=".view.recipes.RecipesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,13 +32,11 @@
         </activity>
         <activity
             android:name=".view.details.RecipeDetailsActivity"
-            android:parentActivityName=".view.RecipesActivity" />
-
+            android:parentActivityName=".view.recipes.RecipesActivity" />
         <activity
             android:name=".view.guidedsteps.GuidedRecipeStepActivity"
-            android:parentActivityName=".view.RecipesActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+            android:parentActivityName=".view.recipes.RecipesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

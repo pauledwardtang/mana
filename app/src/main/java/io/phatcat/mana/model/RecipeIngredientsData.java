@@ -3,6 +3,7 @@ package io.phatcat.mana.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
@@ -44,4 +45,9 @@ public class RecipeIngredientsData {
         return getQuantity() + " " + (measureName.equals("UNIT") ? "" : measureName);
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return getIngredient().name + " (" + getMeasureForDisplay().toLowerCase().trim() + ")";
+    }
 }
